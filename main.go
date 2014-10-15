@@ -3,24 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
-	"os/exec"
+
+	"github.com/dickeyxxx/gonpm/plugins"
 )
 
 func main() {
-	fmt.Println("starting")
-	x("./node/bin/node", "-v")
-	fmt.Println("done")
-}
-
-func x(name string, args ...string) {
-	cmd := exec.Command(name, args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+	if err := plugins.Setup(); err != nil {
+		log.Fatalln(err)
 	}
-}
-
-func InstallNode() {
+	fmt.Println("starting")
+	plugins.ExecNode("-v")
+	fmt.Println("done")
 }
