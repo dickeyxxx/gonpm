@@ -11,18 +11,18 @@ func (c *Context) Mock() *MockContext {
 	mock := &MockContext{Context: c}
 	var stderr bytes.Buffer
 	var stdout bytes.Buffer
-	mock.stderr = &stderr
-	mock.stdout = &stdout
+	mock.Stderr = &stderr
+	mock.Stdout = &stdout
 	mock.exitFn = func(code int) {
 		panic(code)
 	}
 	return mock
 }
 
-func (m *MockContext) Stderr() string {
-	return m.stderr.(*bytes.Buffer).String()
+func (m *MockContext) GetStderr() string {
+	return m.Stderr.(*bytes.Buffer).String()
 }
 
-func (m *MockContext) Stdout() string {
-	return m.stdout.(*bytes.Buffer).String()
+func (m *MockContext) GetStdout() string {
+	return m.Stdout.(*bytes.Buffer).String()
 }

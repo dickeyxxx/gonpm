@@ -14,9 +14,8 @@ func (p *Plugins) Setup() {
 		return
 	}
 	p.Stderrf("Setting up plugins... ")
-	path := filepath.Join(p.AppDir, "plugins")
 	p.Logln("Creating plugins directory")
-	err := os.MkdirAll(path, 0777)
+	err := os.MkdirAll(p.AppDir, 0777)
 	must(err)
 	p.Logln("Downloading node from", NODE_URL)
 	resp, err := http.Get(NODE_URL)
@@ -32,7 +31,7 @@ func (p *Plugins) Setup() {
 			break
 		}
 		must(err)
-		path := filepath.Join(path, hdr.Name)
+		path := filepath.Join(p.AppDir, hdr.Name)
 		switch {
 		case hdr.FileInfo().IsDir():
 			err = os.Mkdir(path, 0777)

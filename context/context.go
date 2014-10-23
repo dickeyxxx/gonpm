@@ -12,18 +12,18 @@ type Context struct {
 	Topic, Command string
 	Args           []string
 	AppDir         string
-	exitFn         func(code int)
-	stdout         io.Writer
-	stderr         io.Writer
 	logger         *log.Logger
+	Stdout         io.Writer
+	Stderr         io.Writer
+	exitFn         func(code int)
 }
 
 func Parse(args ...string) *Context {
 	ctx := &Context{
 		AppDir: homeDir() + "/.gonpm",
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 		exitFn: os.Exit,
-		stdout: os.Stdout,
-		stderr: os.Stderr,
 	}
 	ctx.logger = newLogger(ctx.AppDir + "/gonpm.log")
 	ctx.Topic, ctx.Command, ctx.Args = parse(args...)

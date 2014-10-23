@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/dickeyxxx/gonpm/context"
@@ -17,7 +18,10 @@ func (*Plugins) Name() string {
 
 func (p *Plugins) Initialize(ctx *context.Context) {
 	p.Context = ctx
-	p.nodePath = filepath.Join(p.AppDir, "plugins", NODE_STRING)
+	p.nodePath = filepath.Join(p.AppDir, NODE_STRING)
+	os.Setenv("NODE_PATH", filepath.Join(p.AppDir, "lib", "node_modules"))
+	os.Setenv("NPM_CONFIG_GLOBAL", "true")
+	os.Setenv("NPM_CONFIG_PREFIX", p.AppDir)
 	p.Setup()
 }
 

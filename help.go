@@ -8,6 +8,9 @@ func help() {
 		topic = topicByName(ctx.Args[0])
 	}
 	ctx.Stderrf("USAGE: %s\n", os.Args[0])
+	for _, topic := range topics {
+		ctx.Stderrln(topic.Name())
+	}
 	if topic != nil {
 		topic.Help()
 	}

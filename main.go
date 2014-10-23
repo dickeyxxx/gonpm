@@ -10,13 +10,17 @@ import (
 )
 
 var ctx *context.Context = context.Parse(os.Args[1:]...)
+var myPlugins = &plugins.Plugins{}
 var topics []Topic = []Topic{
-	&plugins.Plugins{},
+	myPlugins,
 }
 
 func main() {
 	defer handlePanic()
 	initializeTopics()
+	for _, plugin := range myPlugins.LoadPluginTopics() {
+		topics = append(topics, plugin)
+	}
 	topic := topicByName(ctx.Topic)
 	if topic == nil {
 		help()
