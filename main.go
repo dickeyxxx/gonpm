@@ -1,17 +1,27 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"os"
 
+	"github.com/dickeyxxx/gonpm/context"
 	"github.com/dickeyxxx/gonpm/plugins"
 )
 
-func main() {
-	if err := plugins.Setup(); err != nil {
-		log.Fatalln(err)
+var ctx *context.Context
+var topics []Topic
+
+func init() {
+	ctx = context.Parse(os.Args[1:]...)
+	topics = []Topic{
+		plugins.Topic(ctx),
 	}
-	fmt.Println("starting")
-	plugins.ExecNode("-v")
-	fmt.Println("done")
+}
+
+func main() {
+	topic := FindTopicByName(ctx.Topic)
+	if topic == nil {
+		Help(ctx)
+		ctx.Exit(2)
+	}
+	topic.Run()
 }
