@@ -12,6 +12,7 @@ func (*Plugins) Name() string {
 
 func (p *Plugins) Initialize(ctx *context.Context) {
 	p.Context = ctx
+	p.Setup()
 }
 
 func (p *Plugins) Run() {

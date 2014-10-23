@@ -16,9 +16,9 @@ func nodeString() string {
 	return "node-" + NODE_VERSION + "-darwin-x64"
 }
 
-func (p *Plugins) Setup() error {
+func (p *Plugins) Setup() {
 	if exists, _ := fileExists(p.nodePath()); exists == true {
-		return nil
+		return
 	}
 	fmt.Println("Downloading " + nodeString() + "...")
 	path := filepath.Join(p.AppDir, "plugins")
@@ -52,7 +52,6 @@ func (p *Plugins) Setup() error {
 	if err != nil {
 		panic(err)
 	}
-	return nil
 }
 
 func must(err error) {
