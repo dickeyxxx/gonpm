@@ -7,21 +7,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-type fakeTopic struct {
-	*context.Context
-}
-
-func (*fakeTopic) Name() string {
-	return "faketopic"
-}
-
-func (*fakeTopic) Help() {
-}
-
-func (f *fakeTopic) Run() {
-	f.Stdoutln("foobar")
-}
-
 func TestMain(t *testing.T) {
 	Convey("with no topic it exits with code 2", t, func() {
 		ctx = context.Parse()
@@ -44,6 +29,6 @@ func TestMain(t *testing.T) {
 		topics = []Topic{&fakeTopic{ctx}}
 		mock := ctx.Mock()
 		main()
-		So(mock.Stdout(), ShouldEqual, "foobar\n")
+		So(mock.Stdout(), ShouldEqual, "faketopic has run\n")
 	})
 }

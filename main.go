@@ -15,7 +15,7 @@ var topics []Topic = []Topic{
 func main() {
 	topic := FindTopicByName(ctx.Topic)
 	if topic == nil {
-		Help()
+		help()
 		ctx.Exit(2)
 	}
 	topic.Run()
