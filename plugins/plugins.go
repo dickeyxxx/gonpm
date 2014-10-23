@@ -10,6 +10,10 @@ func (*Plugins) Name() string {
 	return "plugins"
 }
 
+func (p *Plugins) Initialize(ctx *context.Context) {
+	p.Context = ctx
+}
+
 func (p *Plugins) Run() {
 	switch p.Command {
 	case "install":

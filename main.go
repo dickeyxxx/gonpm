@@ -9,11 +9,12 @@ import (
 
 var ctx *context.Context = context.Parse(os.Args[1:]...)
 var topics []Topic = []Topic{
-	&plugins.Plugins{Context: ctx},
+	&plugins.Plugins{},
 }
 
 func main() {
-	topic := FindTopicByName(ctx.Topic)
+	initializeTopics()
+	topic := topicByName(ctx.Topic)
 	if topic == nil {
 		help()
 		ctx.Exit(2)

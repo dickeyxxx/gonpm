@@ -12,6 +12,10 @@ func (*fakeTopic) Name() string {
 	return "faketopic"
 }
 
+func (f *fakeTopic) Initialize(ctx *context.Context) {
+	f.Context = ctx
+}
+
 func (f *fakeTopic) Help() {
 	f.Stderrln("this is the help for faketopic")
 }

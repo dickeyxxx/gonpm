@@ -16,12 +16,12 @@ func nodeString() string {
 	return "node-" + NODE_VERSION + "-darwin-x64"
 }
 
-func Setup() error {
-	if exists, _ := fileExists(nodePath()); exists == true {
+func (p *Plugins) Setup() error {
+	if exists, _ := fileExists(p.nodePath()); exists == true {
 		return nil
 	}
 	fmt.Println("Downloading " + nodeString() + "...")
-	path := filepath.Join(homeDir(), "plugins")
+	path := filepath.Join(p.AppDir, "plugins")
 	err := os.MkdirAll(path, 0777)
 	must(err)
 	resp, err := http.Get("http://nodejs.org/dist/" + NODE_VERSION + "/" + nodeString() + ".tar.gz")
@@ -48,7 +48,7 @@ func Setup() error {
 			must(err)
 		}
 	}
-	err = os.Chmod(filepath.Join(nodePath(), "bin", "node"), 0777)
+	err = os.Chmod(filepath.Join(p.nodePath(), "bin", "node"), 0777)
 	if err != nil {
 		panic(err)
 	}
@@ -61,6 +61,6 @@ func must(err error) {
 	}
 }
 
-func nodePath() string {
-	return filepath.Join(homeDir(), "plugins", nodeString())
+func (p *Plugins) nodePath() string {
+	return filepath.Join(p.AppDir, "plugins", nodeString())
 }

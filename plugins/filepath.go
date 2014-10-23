@@ -2,17 +2,8 @@ package plugins
 
 import (
 	"os"
-	"os/user"
 	"runtime"
 )
-
-func homeDir() string {
-	user, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	return user.HomeDir + "/.gonpm"
-}
 
 func fileExists(path string) (bool, error) {
 	var err error
