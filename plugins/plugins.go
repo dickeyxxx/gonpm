@@ -6,10 +6,6 @@ type Plugins struct {
 	*context.Context
 }
 
-func Topic(ctx *context.Context) *Plugins {
-	return &Plugins{ctx}
-}
-
 func (*Plugins) Name() string {
 	return "plugins"
 }

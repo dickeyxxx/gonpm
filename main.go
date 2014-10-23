@@ -13,14 +13,14 @@ var topics []Topic
 func init() {
 	ctx = context.Parse(os.Args[1:]...)
 	topics = []Topic{
-		plugins.Topic(ctx),
+		&plugins.Plugins{Context: ctx},
 	}
 }
 
 func main() {
 	topic := FindTopicByName(ctx.Topic)
 	if topic == nil {
-		Help(ctx)
+		Help()
 		ctx.Exit(2)
 	}
 	topic.Run()
