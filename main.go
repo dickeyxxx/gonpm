@@ -13,6 +13,7 @@ var topics []Topic = []Topic{
 }
 
 func main() {
+	defer handlePanic()
 	initializeTopics()
 	topic := topicByName(ctx.Topic)
 	if topic == nil {
@@ -20,4 +21,16 @@ func main() {
 		ctx.Exit(2)
 	}
 	topic.Run()
+}
+
+func handlePanic() {
+	if e := recover(); e != nil {
+		switch e := e.(type) {
+		case int: // This is for when we stub out ctx.Exit
+			os.Exit(e)
+		default:
+			ctx.Stderrln("ERROR:", e)
+			ctx.Exit(1)
+		}
+	}
 }
