@@ -7,23 +7,25 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/dickeyxxx/gonpm/cli"
 )
 
-func (p *Plugins) Setup() {
-	if exists, _ := fileExists(p.nodePath); exists == true {
+func Setup() {
+	if exists, _ := fileExists(nodePath); exists == true {
 		return
 	}
-	p.Stderrf("Setting up plugins... ")
-	p.Logln("Creating plugins directory")
-	err := os.MkdirAll(p.AppDir, 0777)
+	cli.Stderrf("Setting up plugins... ")
+	cli.Logln("Creating plugins directory")
+	err := os.MkdirAll(cli.AppDir, 0777)
 	must(err)
-	p.Logln("Downloading node from", NODE_URL)
+	cli.Logln("Downloading node from", NODE_URL)
 	resp, err := http.Get(NODE_URL)
 	must(err)
 	defer resp.Body.Close()
 	uncompressed, err := gzip.NewReader(resp.Body)
 	must(err)
-	p.Logln("Extracting node to", p.nodePath)
+	cli.Logln("Extracting node to", nodePath)
 	archive := tar.NewReader(uncompressed)
 	for {
 		hdr, err := archive.Next()
@@ -31,7 +33,7 @@ func (p *Plugins) Setup() {
 			break
 		}
 		must(err)
-		path := filepath.Join(p.AppDir, hdr.Name)
+		path := filepath.Join(cli.AppDir, hdr.Name)
 		switch {
 		case hdr.FileInfo().IsDir():
 			err = os.Mkdir(path, 0777)
@@ -49,6 +51,6 @@ func (p *Plugins) Setup() {
 		err = os.Chmod(path, hdr.FileInfo().Mode())
 		must(err)
 	}
-	p.Logln("Finished installing node")
-	p.Stderrln("done")
+	cli.Logln("Finished installing node")
+	cli.Stderrln("done")
 }

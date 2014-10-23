@@ -2,8 +2,14 @@ package plugins
 
 import (
 	"os"
+	"os/user"
+	"path/filepath"
 	"runtime"
 )
+
+var appDir = filepath.Join(homeDir(), "/.gonpm")
+var nodePath = filepath.Join(appDir, NODE_STRING, "bin", "node")
+var npmPath = filepath.Join(appDir, NODE_STRING, "bin", "npm")
 
 func fileExists(path string) (bool, error) {
 	var err error
@@ -20,4 +26,12 @@ func fileExists(path string) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func homeDir() string {
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	return user.HomeDir
 }

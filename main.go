@@ -3,37 +3,33 @@ package main
 import (
 	"os"
 	"runtime/debug"
+	"strings"
 	"time"
 
-	"github.com/dickeyxxx/gonpm/context"
+	"github.com/dickeyxxx/gonpm/cli"
 	"github.com/dickeyxxx/gonpm/plugins"
 )
 
-var ctx *context.Context = context.Parse(os.Args[1:]...)
-var myPlugins = &plugins.Plugins{}
-var topics []Topic = []Topic{
-	myPlugins,
+var topics []*cli.Topic = []*cli.Topic{
+	plugins.Topic,
 }
 
 func main() {
 	defer handlePanic()
-	initializeTopics()
-	for _, plugin := range myPlugins.LoadPluginTopics() {
-		topics = append(topics, plugin)
+	plugins.Setup()
+	for _, plugin := range plugins.ListPlugins() {
+		topics = append(topics, plugin.Topic)
 	}
-	topic := topicByName(ctx.Topic)
+	topicName, command, args := parse(os.Args[1:]...)
+	topic := topicByName(topicName)
 	if topic == nil {
-		help()
-		ctx.Exit(2)
+		help(command, args...)
+		cli.Exit(2)
 	}
-	run(topic)
-}
-
-func run(topic Topic) {
-	ctx.Logf("Running %s:%s %s\n", ctx.Topic, ctx.Command, ctx.Args)
+	cli.Logf("Running %s:%s %s\n", topicName, command, args)
 	before := time.Now()
-	topic.Run()
-	ctx.Logf("Finished in %s\n", (time.Since(before)))
+	topic.Run(command, args...)
+	cli.Logf("Finished in %s\n", (time.Since(before)))
 }
 
 func handlePanic() {
@@ -43,9 +39,31 @@ func handlePanic() {
 			// This is for when we stub out ctx.Exit
 			panic(e)
 		default:
-			ctx.Logf("ERROR: %s\n%s", e, debug.Stack())
-			ctx.Stderrln("ERROR:", e)
-			ctx.Exit(1)
+			cli.Logf("ERROR: %s\n%s", e, debug.Stack())
+			cli.Stderrln("ERROR:", e)
+			cli.Exit(1)
 		}
 	}
+}
+
+func parse(input ...string) (topic, command string, args []string) {
+	if len(input) == 0 {
+		return
+	}
+	tc := strings.SplitN(input[0], ":", 2)
+	topic = tc[0]
+	if len(tc) == 2 {
+		command = tc[1]
+	}
+	args = input[1:]
+	return topic, command, args
+}
+
+func topicByName(name string) *cli.Topic {
+	for _, topic := range topics {
+		if name == topic.Name {
+			return topic
+		}
+	}
+	return nil
 }
