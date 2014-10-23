@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	os.Setenv("NODE_PATH", filepath.Join(appDir, "lib", "node_modules"))
+	os.Setenv("NODE_PATH", filepath.Join(cli.AppDir, "lib", "node_modules"))
 	os.Setenv("NPM_CONFIG_GLOBAL", "true")
-	os.Setenv("NPM_CONFIG_PREFIX", appDir)
+	os.Setenv("NPM_CONFIG_PREFIX", cli.AppDir)
 }
 
 var Topic = &cli.Topic{
