@@ -10,7 +10,7 @@ import (
 func TestTopic(t *testing.T) {
 	Convey("it shows the help", t, func() {
 		ctx := context.Parse("plugins:install").Mock()
-		plugins := &Plugins{ctx.Context}
+		plugins := &Plugins{Context: ctx.Context}
 		So(func() {
 			plugins.Run()
 		}, ShouldPanicWith, 2)
