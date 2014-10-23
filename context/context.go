@@ -1,7 +1,6 @@
 package context
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -10,6 +9,7 @@ import (
 type Context struct {
 	Topic, Command string
 	Args           []string
+	AppDir         string
 	exitFn         func(code int)
 	stdout         io.Writer
 	stderr         io.Writer
@@ -17,38 +17,24 @@ type Context struct {
 
 func Parse(args ...string) *Context {
 	ctx := &Context{
+		AppDir: homeDir() + "/.gonpm",
 		exitFn: os.Exit,
 		stdout: os.Stdout,
 		stderr: os.Stderr,
 	}
-	if len(args) == 0 {
-		return ctx
-	}
-	tc := strings.SplitN(args[0], ":", 2)
-	ctx.Topic = tc[0]
-	if len(tc) == 2 {
-		ctx.Command = tc[1]
-	}
-	ctx.Args = args[1:]
+	ctx.Topic, ctx.Command, ctx.Args = parse(args...)
 	return ctx
 }
 
-func (c *Context) Exit(code int) {
-	c.exitFn(code)
-}
-
-func (c *Context) Stderrf(format string, a ...interface{}) (n int, err error) {
-	return fmt.Fprintf(c.stderr, format, a...)
-}
-
-func (c *Context) Stderrln(a ...interface{}) (n int, err error) {
-	return fmt.Fprintln(c.stderr, a...)
-}
-
-func (c *Context) Stdoutf(format string, a ...interface{}) (n int, err error) {
-	return fmt.Fprintf(c.stdout, format, a...)
-}
-
-func (c *Context) Stdoutln(a ...interface{}) (n int, err error) {
-	return fmt.Fprintln(c.stdout, a...)
+func parse(input ...string) (topic, command string, args []string) {
+	if len(input) == 0 {
+		return
+	}
+	tc := strings.SplitN(input[0], ":", 2)
+	topic = tc[0]
+	if len(tc) == 2 {
+		command = tc[1]
+	}
+	args = input[1:]
+	return topic, command, args
 }

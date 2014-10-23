@@ -5,5 +5,5 @@ func (p *Plugins) install() {
 		p.Help()
 		p.Exit(2)
 	}
-	p.Stdoutln("installing...")
+	p.Stdoutln("installing...", p.AppDir)
 }
