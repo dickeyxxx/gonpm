@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"runtime/debug"
 
 	"github.com/dickeyxxx/gonpm/context"
 	"github.com/dickeyxxx/gonpm/plugins"
@@ -20,6 +21,7 @@ func main() {
 		help()
 		ctx.Exit(2)
 	}
+	ctx.Logf("Running %s:%s %s\n", ctx.Topic, ctx.Command, ctx.Args)
 	topic.Run()
 }
 
@@ -30,6 +32,7 @@ func handlePanic() {
 			// This is for when we stub out ctx.Exit
 			panic(e)
 		default:
+			ctx.Logf("ERROR: %s\n%s", e, debug.Stack())
 			ctx.Stderrln("ERROR:", e)
 			ctx.Exit(1)
 		}

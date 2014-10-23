@@ -1,9 +1,14 @@
 package plugins
 
-import "github.com/dickeyxxx/gonpm/context"
+import (
+	"path/filepath"
+
+	"github.com/dickeyxxx/gonpm/context"
+)
 
 type Plugins struct {
 	*context.Context
+	nodePath string
 }
 
 func (*Plugins) Name() string {
@@ -12,6 +17,7 @@ func (*Plugins) Name() string {
 
 func (p *Plugins) Initialize(ctx *context.Context) {
 	p.Context = ctx
+	p.nodePath = filepath.Join(p.AppDir, "plugins", NODE_STRING)
 	p.Setup()
 }
 

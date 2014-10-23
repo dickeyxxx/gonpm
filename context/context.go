@@ -2,7 +2,9 @@ package context
 
 import (
 	"io"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -13,6 +15,7 @@ type Context struct {
 	exitFn         func(code int)
 	stdout         io.Writer
 	stderr         io.Writer
+	logger         *log.Logger
 }
 
 func Parse(args ...string) *Context {
@@ -22,8 +25,17 @@ func Parse(args ...string) *Context {
 		stdout: os.Stdout,
 		stderr: os.Stderr,
 	}
+	ctx.logger = newLogger(ctx.AppDir + "/gonpm.log")
 	ctx.Topic, ctx.Command, ctx.Args = parse(args...)
 	return ctx
+}
+
+func newLogger(path string) *log.Logger {
+	err := os.MkdirAll(filepath.Dir(path), 0777)
+	must(err)
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	must(err)
+	return log.New(file, "", log.LstdFlags)
 }
 
 func parse(input ...string) (topic, command string, args []string) {
@@ -37,4 +49,10 @@ func parse(input ...string) (topic, command string, args []string) {
 	}
 	args = input[1:]
 	return topic, command, args
+}
+
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

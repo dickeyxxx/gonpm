@@ -7,12 +7,12 @@ import (
 )
 
 func (p *Plugins) node(args ...string) {
-	bin := filepath.Join(p.nodePath(), "bin", "node")
+	bin := filepath.Join(p.nodePath, "bin", "node")
 	runCmd(bin, args...)
 }
 
 func (p *Plugins) npm(args ...string) {
-	bin := filepath.Join(p.nodePath(), "bin", "npm")
+	bin := filepath.Join(p.nodePath, "bin", "npm")
 	runCmd(bin, args...)
 }
 
