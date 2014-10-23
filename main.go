@@ -27,7 +27,7 @@ func handlePanic() {
 	if e := recover(); e != nil {
 		switch e := e.(type) {
 		case int: // This is for when we stub out ctx.Exit
-			os.Exit(e)
+			panic(e)
 		default:
 			ctx.Stderrln("ERROR:", e)
 			ctx.Exit(1)
