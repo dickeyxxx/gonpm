@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"runtime/debug"
+	"time"
 
 	"github.com/dickeyxxx/gonpm/context"
 	"github.com/dickeyxxx/gonpm/plugins"
@@ -21,8 +22,14 @@ func main() {
 		help()
 		ctx.Exit(2)
 	}
+	run(topic)
+}
+
+func run(topic Topic) {
 	ctx.Logf("Running %s:%s %s\n", ctx.Topic, ctx.Command, ctx.Args)
+	before := time.Now()
 	topic.Run()
+	ctx.Logf("Finished in %s\n", (time.Since(before)))
 }
 
 func handlePanic() {
