@@ -7,14 +7,9 @@ import (
 	"github.com/dickeyxxx/gonpm/plugins"
 )
 
-var ctx *context.Context
-var topics []Topic
-
-func init() {
-	ctx = context.Parse(os.Args[1:]...)
-	topics = []Topic{
-		&plugins.Plugins{Context: ctx},
-	}
+var ctx *context.Context = context.Parse(os.Args[1:]...)
+var topics []Topic = []Topic{
+	&plugins.Plugins{Context: ctx},
 }
 
 func main() {
