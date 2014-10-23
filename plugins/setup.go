@@ -13,15 +13,18 @@ func (p *Plugins) Setup() {
 	if exists, _ := fileExists(p.nodePath); exists == true {
 		return
 	}
-	p.Stderrln("Setting up plugins... ")
+	p.Stderrf("Setting up plugins... ")
 	path := filepath.Join(p.AppDir, "plugins")
+	p.Logln("Creating plugins directory")
 	err := os.MkdirAll(path, 0777)
 	must(err)
+	p.Logln("Downloading node from", NODE_URL)
 	resp, err := http.Get(NODE_URL)
 	must(err)
 	defer resp.Body.Close()
 	uncompressed, err := gzip.NewReader(resp.Body)
 	must(err)
+	p.Logln("Extracting node to", p.nodePath)
 	archive := tar.NewReader(uncompressed)
 	for {
 		hdr, err := archive.Next()
@@ -30,19 +33,23 @@ func (p *Plugins) Setup() {
 		}
 		must(err)
 		path := filepath.Join(path, hdr.Name)
-		if hdr.FileInfo().IsDir() {
+		switch {
+		case hdr.FileInfo().IsDir():
 			err = os.Mkdir(path, 0777)
 			must(err)
-		} else {
+		case hdr.Linkname != "":
+			err = os.Symlink(hdr.Linkname, path)
+			must(err)
+		default:
 			file, err := os.Create(path)
 			must(err)
 			defer file.Close()
 			_, err = io.Copy(file, archive)
 			must(err)
 		}
+		err = os.Chmod(path, hdr.FileInfo().Mode())
+		must(err)
 	}
-	err = os.Chmod(filepath.Join(p.nodePath, "bin", "node"), 0777)
-	must(err)
-	err = os.Chmod(filepath.Join(p.nodePath, "bin", "npm"), 0777)
-	must(err)
+	p.Logln("Finished installing node")
+	p.Stderrln("done")
 }
