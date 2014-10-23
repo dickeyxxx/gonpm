@@ -20,7 +20,7 @@ func main() {
 	for _, plugin := range plugins.ListPlugins() {
 		topics = append(topics, plugin.Topic)
 	}
-	topicName, command, args := parse(os.Args[1:]...)
+	topicName, command, args := parse(os.Args[1:])
 	topic := topicByName(topicName)
 	if topic == nil {
 		help(command, args...)
@@ -46,7 +46,7 @@ func handlePanic() {
 	}
 }
 
-func parse(input ...string) (topic, command string, args []string) {
+func parse(input []string) (topic, command string, args []string) {
 	if len(input) == 0 {
 		return
 	}
