@@ -15,10 +15,10 @@ func init() {
 }
 
 var Topic = &cli.Topic{
-	Name:        "plugins",
-	Description: "manage plugins",
-	Run:         Run,
-	Help:        Help,
+	Name:      "plugins",
+	ShortHelp: "manage plugins",
+	Run:       Run,
+	Help:      Help,
 }
 
 func Run(command string, args ...string) {

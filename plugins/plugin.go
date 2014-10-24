@@ -1,7 +1,9 @@
 package plugins
 
 import (
+	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/dickeyxxx/gonpm/cli"
 )
@@ -15,12 +17,19 @@ type Plugin struct {
 
 func pluginRun(name string) func(command string, args ...string) {
 	return func(command string, args ...string) {
-		runNode(`require('` + name + `').run()`)
+		context := `{
+			"app": "dickey-xxx",
+			"token": "` + os.Getenv("HEROKU_API_KEY") + `"
+		}`
+		runNode(`require('` + name + `').run("` + command + `", [], {}, ` + context + `)`)
 	}
 }
 
-func pluginDescription(name string) string {
-	return "TODO: get description from package.json"
+func pluginShortHelp(name string) string {
+	script := `console.log(require('` + name + `').shortHelp)`
+	output, err := exec.Command(nodePath, "-e", script).Output()
+	must(err)
+	return strings.TrimSpace(string(output))
 }
 
 func pluginHelp(name string) func(command string, args ...string) {
