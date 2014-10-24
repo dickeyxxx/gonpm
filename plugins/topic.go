@@ -15,9 +15,10 @@ func init() {
 }
 
 var Topic = &cli.Topic{
-	Name: "plugins",
-	Run:  Run,
-	Help: Help,
+	Name:        "plugins",
+	Description: "manage plugins",
+	Run:         Run,
+	Help:        Help,
 }
 
 func Run(command string, args ...string) {
@@ -37,5 +38,5 @@ func Run(command string, args ...string) {
 }
 
 func Help(command string, args ...string) {
-	cli.Stderrln("plugins help for:", command, args)
+	cli.Stderrln("TODO: help for " + command)
 }

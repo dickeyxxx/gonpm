@@ -19,6 +19,10 @@ func pluginRun(name string) func(command string, args ...string) {
 	}
 }
 
+func pluginDescription(name string) string {
+	return "TODO: get description from package.json"
+}
+
 func pluginHelp(name string) func(command string, args ...string) {
 	return func(command string, args ...string) {
 		runNode(`require('` + name + `').help()`)

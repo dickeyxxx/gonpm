@@ -33,9 +33,10 @@ func ListPlugins() []*Plugin {
 	var plugins []*Plugin
 	for name, p := range doc["dependencies"] {
 		p.Topic = &cli.Topic{
-			Name: name,
-			Run:  pluginRun(name),
-			Help: pluginHelp(name),
+			Name:        name,
+			Description: pluginDescription(name),
+			Run:         pluginRun(name),
+			Help:        pluginHelp(name),
 		}
 		plugins = append(plugins, p)
 	}
