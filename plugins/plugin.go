@@ -15,7 +15,7 @@ type Plugin struct {
 
 func pluginRun(name string) func(command string, args ...string) {
 	return func(command string, args ...string) {
-		runNode(`require('` + name + `')()`)
+		runNode(`require('` + name + `').run()`)
 	}
 }
 
